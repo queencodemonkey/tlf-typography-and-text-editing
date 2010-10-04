@@ -254,7 +254,10 @@
 				{
 					page = addPage();
 				}
-				while ( page.textLength == 0 )
+				// If a page is not the first page but has a text length of 0,
+				// then it is extraneous and should be removed for
+				// auto-pagination.
+				while ( page.textLength == 0 && pageGroup.numElements > 1 )
 				{
 					removePage();
 					page = pageGroup.getElementAt( pageGroup.numElements - 1 ) as Page;
