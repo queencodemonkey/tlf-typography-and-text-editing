@@ -100,9 +100,10 @@
 			}
 			
 			/**
-			 * 
-			 * @param event
-			 * 
+			 * @private
+			 * Loads the text data into pages.  Either one or all pages are
+			 * loaded depending on whether the user has selected
+			 * auto-pagination.
 			 */
 			private function loadButton_clickHandler( event:MouseEvent ):void
 			{
