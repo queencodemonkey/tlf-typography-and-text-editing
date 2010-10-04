@@ -1,0 +1,74 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace layoutComponents "com.queencodemonkey.tttlf.layout.components.*";
+@namespace editorComponents "com.queencodemonkey.tttlf.editor.components.*";
+
+s|Application
+{
+	skin-class: ClassReference( "com.queencodemonkey.tttlf.skins.ApplicationSkin" );
+}
+
+.title, .exampleGroupLabel
+{
+	font-family: "Minion Pro, Times New Roman, Times, serif";
+	vertical-align: bottom;
+	typographic-case: "lowercaseToSmallCaps";
+}
+
+.exampleGroupLabel
+{
+	font-size: 14;
+}
+
+.title
+{
+	font-size: 36;
+}
+
+.exampleBorderContainer
+{
+	border-color: #999999;
+	border-weight: 2;
+}
+
+.arrowText
+{
+	font-size: 72;
+}
+
+.codeText
+{
+	font-family: "Monaco, Courier, mono";
+	font-size: 10;
+	line-height: "150%";
+}
+
+.capsElement
+{
+	color: #FF0000;
+}
+
+/*******************************************************************************
+ *
+ * C O N T A I N E R   L A Y O U T    E X A M P L E
+ *
+ ******************************************************************************/
+layoutComponents|ResizeableContainer #resizeButton
+{
+	skin-class: ClassReference( "com.queencodemonkey.tttlf.skins.layout.ResizeButtonSkin" );
+}
+
+/*******************************************************************************
+*
+* T E X T    E D I T I N G    E X A M P L E
+*
+******************************************************************************/
+editorComponents|FormatToolbarToggleButton
+{
+}
+
+editorComponents|Editor
+{
+	skin-class: ClassReference( "com.queencodemonkey.tttlf.editor.skins.EditorSkin" );
+}

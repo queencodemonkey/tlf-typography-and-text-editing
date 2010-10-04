@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+*******************************************************************************
+*
+*  Copyright (c) 2010 Huyen Tue Dao
+*
+*  Permission is hereby granted, free of charge, to any person obtaining a
+*  copy of this software and associated documentation files (the "Software"),
+*  to deal in the Software without restriction, including without limitation
+*  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+*  and/or sell copies of the Software, and to permit persons to whom the
+*  Software is furnished to do so, subject to the following conditions:
+*
+*  The above copyright notice and this permission notice shall be included in
+*  all copies or substantial portions of the Software.
+*
+*  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+*  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+*  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+*  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+*  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+*  DEALINGS IN THE SOFTWARE.
+*
+*******************************************************************************
+-->
+<!---This application demonstrates several methods of importing a TextFlow as
+a string or XML.-->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="100%" height="100%"
+			   creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Style source="assets/css/global.css"/>
+	
+	<fx:Declarations>
+		<fx:String id="htmlMarkupString">
+			<![CDATA[<s:RichText>
+   <s:content>
+      <s:div fontFamily="Minion Pro" fontSize="18">
+         <s:p paragraphStartIndent="70" textIndent="-70">
+            <s:span fontWeight="bold">Mongol General: </s:span>
+            Conan! What is best in life?
+         </s:p>
+         <s:p paragraphStartIndent="70" textIndent="-70">
+            <s:span fontWeight="bold">Conan: </s:span>
+            To crush your enemies,
+            see them driven before you,
+            and to hear the lamentation of their women.
+         </s:p>
+      </s:div>
+   </s:content>
+</s:RichText]]>
+		</fx:String>
+		
+		<fx:String id="textLayoutMarkupString">
+			<![CDATA[<s:RichText>
+   <s:textFlow>
+      <s:TextFlow fontFamily="Trajan Pro, Times New Roman"
+         fontSize="24" fontWeight="bold">
+         This… is…<s:br/>
+         <s:span fontSize="48" tracking="24"
+            typographicCase="uppercase">Sparta!</s:span>
+      </s:TextFlow>
+   </s:textFlow>
+</s:RichText>]]>
+		</fx:String>
+		
+		<fx:String id="asCreationString">
+	var textFlow:TextFlow = new TextFlow();
+	var paragraphElement:ParagraphElement = new ParagraphElement();
+	var spanElement:SpanElement = new SpanElement();
+	spanElement.text = "I'm gettin' heartburn. Tony, do something terrible.";
+	spanElement.fontFamily = "Helvetica";
+	spanElement.fontSize = 18;
+	paragraphElement.addChild( spanElement );
+	textFlow.addChild( paragraphElement )			
+		</fx:String>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.conversion.TextConverter;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var htmlTextString:String = "<textformat leading=\"18\"><p><font size=\"24\">Scott, if your life had a face, I would <i>punch</i> it.<br/><i>I would punch your life in the face.</i></font></p></textformat>";
+			
+			[Bindable]
+			public var textLayoutXML:XML =
+				<TextFlow xmlns="http://ns.adobe.com/textLayout/2008"
+					fontFamily="Helvetica,Arial,sans" fontSize="18"
+					paragraphStartIndent="105" textIndent="-105"
+					breakingOpportunity="auto">
+					<p>
+						<span fontWeight="bold">Mr. Furious: </span>
+						<span fontStyle="italic">[trying to balance a hammer on his head]</span>
+						<br/>
+						Why am I doing this, again?
+					</p>
+					<p>
+						<span fontWeight="bold">The Sphinx: </span>
+						When you can balance a tack hammer on your head, you will head off your foes with a balanced attack.
+					</p>
+					<p>
+						<span fontWeight="bold">Mr. Furious: </span>
+						And why am I wearing the watermelon on my feet?
+					</p>
+					<p>
+						<span fontWeight="bold">The Sphinx: </span>
+						<span fontStyle="italic">[Looks at the watermelon on Mr. Furious' feet] </span>
+						<br/>
+						I don't remember telling you to do that.
+					</p>
+				</TextFlow>;
+				
+			private function createTextFlow():TextFlow
+			{
+				var textFlow:TextFlow = new TextFlow();
+				var paragraphElement:ParagraphElement = new ParagraphElement();
+				var spanElement:SpanElement = new SpanElement();
+				spanElement.text = "I'm gettin' heartburn. Tony, do something terrible.";
+				spanElement.fontFamily = "Helvetica";
+				spanElement.fontSize = 18;
+				paragraphElement.addChild( spanElement );
+				textFlow.addChild( paragraphElement )
+				return textFlow;
+			}
+			
+			private function creationCompleteHandler( event:FlexEvent ):void
+			{
+				importedTextFlowDisplay.textFlow = TextConverter.importToFlow( htmlTextString, TextConverter.PLAIN_TEXT_FORMAT );
+				importData.text = htmlTextString;
+				
+				asCreationRichText.textFlow = createTextFlow();
+			}
+			
+			private function importFormatComboBox_changeHandler( event:IndexChangeEvent ):void
+			{
+				switch( importFormatComboBox.selectedItem )
+				{
+					case "Plain text, String":
+						importedTextFlowDisplay.textFlow = TextConverter.importToFlow( htmlTextString, TextConverter.PLAIN_TEXT_FORMAT );
+						break;
+					case "HTML text, String":
+						importedTextFlowDisplay.textFlow = TextConverter.importToFlow( htmlTextString, TextConverter.TEXT_FIELD_HTML_FORMAT );
+						break;
+					case "Text Layout, XML":
+						importedTextFlowDisplay.textFlow = TextConverter.importToFlow( textLayoutXML, TextConverter.TEXT_LAYOUT_FORMAT );
+						break;
+				}
+				
+				switch( importFormatComboBox.selectedItem )
+				{
+					case "Plain text, String":
+					case "HTML text, String":
+						importData.text = htmlTextString;
+						break;
+					case "Text Layout, XML":
+						importData.text = textLayoutXML.toXMLString();
+						break;
+				}
+				
+			}
+
+		]]>
+	</fx:Script>
+	
+	<s:RichText
+		top="20" left="20"
+		height="50"
+		text="Creating and Importing TextFlows"
+		styleName="title"/>
+	
+	<s:VGroup id="exampleGroup"
+			 top="50" left="20" right="20" bottom="50">
+		
+		<s:Group id="creationGroup"
+				 width="100%">
+			
+			<s:RichText
+				top="35" x="{ mxmlCreationContainer.x }"
+				text="Using MXML Tags: HTML and Text Layout…"
+				styleName="exampleGroupLabel"/>
+			
+			<s:BorderContainer id="mxmlCreationContainer"
+							   top="50"
+							   width="100%" height="100%"
+							   styleName="exampleBorderContainer">
+				
+				<s:layout>
+					<s:VerticalLayout gap="20" horizontalAlign="center"
+									  paddingTop="40" paddingBottom="40" paddingLeft="50" paddingRight="50"/>
+				</s:layout>
+				
+				<s:Group id="htmlMarkupGroup"
+						 width="100%">
+					
+					<s:layout>
+						<s:HorizontalLayout gap="10" verticalAlign="middle"/>
+					</s:layout>
+					
+					<s:Label id="htmlMarkupText"
+							 width="400"
+							 text="{ htmlMarkupString }"
+							 styleName="codeText"/>
+					
+					<s:Label width="50"
+							 text="⇒"
+							 styleName="arrowText"/>
+					
+					<s:RichText id="htmlMarkupRichText"
+								width="100%">
+						<s:content>
+							<s:div fontFamily="Minion Pro" fontSize="18">
+								<s:p paragraphStartIndent="70" textIndent="-70">
+									<s:span fontWeight="bold">Mongol General: </s:span>
+									Conan! What is best in life?
+								</s:p>
+								<s:p paragraphStartIndent="70" textIndent="-70">
+									<s:span fontWeight="bold">Conan: </s:span>
+									To crush your enemies,
+									see them driven before you,
+									and to hear the lamentation of their women.
+								</s:p>
+							</s:div>
+						</s:content>
+					</s:RichText>
+					
+				</s:Group>		
+				
+				<s:Group id="textLayoutMarkupGroup"
+						 width="100%">
+					
+					<s:layout>
+						<s:HorizontalLayout gap="20" verticalAlign="middle"/>
+					</s:layout>
+					
+					<s:Label id="textLayoutMarkupText"
+							 width="400"
+							 text="{ textLayoutMarkupString }"
+							 styleName="codeText"/>
+					
+					<s:Label width="50"
+							 text="⇒"
+							 styleName="arrowText"/>
+					
+					<s:RichText id="textLayoutMarkupRichText"
+								width="100%">
+						<s:textFlow>
+							<s:TextFlow fontFamily="Trajan Pro, Times New Roman" fontSize="24" fontWeight="bold">
+								This… is… <s:br/>
+								<s:span fontSize="48" tracking="24" typographicCase="uppercase">Sparta!</s:span>
+							</s:TextFlow>
+						</s:textFlow>
+					</s:RichText>
+					
+				</s:Group>
+				
+				<s:Group id="asCreationGroup"
+						 width="100%">
+					
+					<s:layout>
+						<s:HorizontalLayout gap="20" verticalAlign="middle"/>
+					</s:layout>
+					
+					<s:Label id="asCreationText"
+							 width="400"
+							 text="{ asCreationString }"
+							 styleName="codeText"/>
+					
+					<s:Label width="50"
+							 text="⇒"
+							 styleName="arrowText"/>
+					
+					<s:RichText id="asCreationRichText"
+								width="100%"/>
+					
+				</s:Group>
+				
+			</s:BorderContainer>
+			
+		</s:Group>
+		
+		<s:Group id="importingGroup"
+				 width="100%">
+			
+			<s:RichText
+				top="35" x="{ importContainer.x }"
+				text="Using TextConverter.importToFlow…"
+				styleName="exampleGroupLabel"/>
+			
+			<s:BorderContainer id="importContainer"
+							   top="50" bottom="50"
+							   width="100%" height="550"
+							   styleName="exampleBorderContainer">
+				
+				<s:RichText top="25" left="25"
+							text="Data,format: "
+							styleName="exampleGroupLabel"/>
+				
+				<s:ComboBox id="importFormatComboBox"
+							top="40" left="25" 
+							width="150"
+							requireSelection="true"
+							change="importFormatComboBox_changeHandler(event)">
+					<s:dataProvider>
+						<s:ArrayList>
+							<fx:String>Plain text, String</fx:String>
+							<fx:String>HTML text, String</fx:String>
+							<fx:String>Text Layout, XML</fx:String>
+						</s:ArrayList>
+					</s:dataProvider>
+				</s:ComboBox>
+				
+				<s:Group id="importTestGroup"
+						 top="60" bottom="30" left="20" right="20">
+					
+					<s:layout>
+						<s:HorizontalLayout gap="20" verticalAlign="middle" horizontalAlign="center"
+											paddingLeft="50" paddingRight="50"/>
+					</s:layout>
+					
+					<s:Label id="importData"	
+							 width="450"
+							 styleName="codeText"/>
+					
+					<s:Label width="50"
+							 text="⇒"
+							 styleName="arrowText"/>
+					
+					<s:RichText id="importedTextFlowDisplay"
+								width="100%"/>
+					
+				</s:Group>
+				
+			</s:BorderContainer>
+			
+		</s:Group>
+		
+	</s:VGroup>
+	
+</s:Application>

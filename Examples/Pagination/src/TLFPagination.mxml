@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *******************************************************************************
+ *
+ *  Copyright (c) 2010 Huyen Tue Dao
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ *  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *  DEALINGS IN THE SOFTWARE.
+ *
+ *******************************************************************************
+-->
+<!--- Pagination example for TLF. -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<fx:Declarations>
+		<fx:XML id="textFlowData" source="assets/data/hhga.xml"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.queencodemonkey.tttlf.components.layout.Page;
+			
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.elements.TextFlow;
+			
+			XML.ignoreWhitespace = false;
+			
+			private static const PAGE_WIDTH:Number = 400;
+			private static const PAGE_HEIGHT:Number = 540;
+			
+			private var textFlow:TextFlow = null;
+			
+			private var pagePool:Array = [];
+			
+			/**
+			 * @private
+			 * Creates a new page for rendering text.
+			 * @return The created page.
+			 */
+			private function createPage():Page
+			{
+				var newPage:Page = new Page();
+				newPage.width = PAGE_WIDTH;
+				newPage.height = PAGE_HEIGHT;
+				return newPage;
+			}
+			
+			/**
+			 * @private
+			 * Adds a new page to the text rendering of the data. 
+			 * @return The page added. 
+			 */
+			private function addPage():Page
+			{
+				var newPage:Page = pagePool.length == 0? createPage() : pagePool.pop();
+				pageGroup.addElement( newPage );
+				newPage.linkToTextFlow( textFlow );
+				return newPage;
+			}
+			
+			/**
+			 * @private.
+			 * Removes the last page from the text rendering.
+			 */
+			private function removePage():void
+			{
+				var pageToRemove:Page = pageGroup.getElementAt( pageGroup.numElements - 1 ) as Page;
+				pageToRemove.unlinkFromTextFlow();
+				pageGroup.removeElement( pageToRemove );
+				pagePool.push( pageToRemove );
+			}
+			
+			/**
+			 * @private
+			 * Removes all the pages from the text rendering. 
+			 */
+			private function removeAllPages():void
+			{
+				while ( pageGroup.numElements > 0 )
+				{
+					removePage();
+				}
+			}
+			
+			/**
+			 * 
+			 * @param event
+			 * 
+			 */
+			private function loadButton_clickHandler( event:MouseEvent ):void
+			{
+				if ( pageGroup.numElements > 0 )
+				{
+					removeAllPages();
+				}
+				textFlow = TextConverter.importToFlow( textFlowData, TextConverter.TEXT_LAYOUT_FORMAT );
+				if ( autoPaginateCheckBox.selected )
+				{
+					var page:Page = addPage();
+					while ( !page.isLastPage() )
+					{
+						page = addPage();
+					}
+				}
+				else
+				{
+					addPage();
+					addPageButton.enabled = true;
+					removePageButton.enabled = true;
+				}
+				loadButton.label = "Reload text";
+			}
+			
+			/**
+			 * @private
+			 * Resets the add/remove buttons when auto-pagination is turned
+			 * on/off. 
+			 */
+			private function autoPaginateCheckBox_changeHandler(event:Event):void
+			{
+				addPageButton.enabled = false;
+				removePageButton.enabled = false;
+			}
+
+
+			/**
+			 * @private 
+			 * Adds a page when the "Add page" button is clicked.
+			 */
+			private function addPageButton_clickHandler(event:MouseEvent):void
+			{
+				addPage();
+				removePageButton.enabled = true;
+			}
+
+			/**
+			 * @private
+			 * Removes a page when the "Remove page" button is clicked. 
+			 * 
+			 */
+			private function removePageButton_clickHandler(event:MouseEvent):void
+			{
+				removePage();
+				if ( pageGroup.numElements == 0 )
+				{
+					removePageButton.enabled = false;
+				}
+			}
+
+		]]>
+	</fx:Script>
+	
+	<!--- Controls for turning auto-pagination on/off and adding/removing
+	pages.-->
+	<s:BorderContainer id="controlsContainer"
+					   width="100%" height="100"
+					   borderColor="0x999999" borderWeight="2">		
+		<s:layout>
+			<s:HorizontalLayout gap="20" verticalAlign="middle" paddingLeft="50"/>
+		</s:layout>
+		
+		<s:RichText id="controlsLabel"
+					text="Pagination with TLF"
+					fontFamily="Minion Pro, Times New Roman, Times, serif" fontSize="36"/>
+		
+		<s:Button id="loadButton"
+				  label="Load text"
+				  click="loadButton_clickHandler( event )"/>
+		
+		<s:CheckBox id="autoPaginateCheckBox"
+					label="Auto-paginate"
+					selected="true"
+					change="autoPaginateCheckBox_changeHandler( event )"/>
+		
+		<s:Button id="addPageButton"
+				  label="Add page"
+				  enabled="false"
+				  click="addPageButton_clickHandler( event )"/>
+		
+		<s:Button id="removePageButton"
+				  label="Remove page"
+				  enabled="false"
+				  click="removePageButton_clickHandler( event )"/>
+		
+	</s:BorderContainer>
+	
+	<s:Rect top="100" bottom="0"
+			width="100%">	
+		<s:fill>
+			<s:SolidColor color="0xCCCCCC"/>
+		</s:fill>
+		
+	</s:Rect>
+	
+	<!--- Scrollable collection of pages rendering text content. -->
+	<s:Scroller id="pageScroller"
+				top="100" bottom="0" horizontalCenter="0"
+				width="100%">
+		
+		<!--- Group of all pages rendering text content -->
+		<s:Group id="pageGroup"
+				 width="100%" height="100%" horizontalCenter="0">
+			<s:layout>
+				<s:VerticalLayout gap="20" horizontalAlign="center" paddingTop="50" paddingBottom="50"/>
+			</s:layout>
+		</s:Group>
+		
+	</s:Scroller>
+	
+</s:Application>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *******************************************************************************
+ *
+ *  Copyright (c) 2010 Huyen Tue Dao
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ *  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *  DEALINGS IN THE SOFTWARE.
+ *
+ *******************************************************************************
+-->
+<!---This application provides examples of built-in TLF functionality in Flex
+Spark components -->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<fx:Style source="assets/css/global.css"/>
+	
+	<s:RichText
+		top="25" left="95"
+		height="50"
+		text="Using TLF in Flex 4 Text Components"
+		styleName="title"/>
+
+	<s:VGroup id="exampleGroup"
+			  top="50" left="100" right="200"
+			  height="100%"
+			  horizontalAlign="center">
+
+		<s:Group id="richTextExampleGroup"
+				 width="100%">
+			
+			<s:RichText
+				top="35" x="{ richTextExampleContainer.x }"
+				text="Using RichText…"
+				styleName="exampleGroupLabel"/>
+			
+			<!---The examples in this container use the RichText component to
+			render plain text and text with advanced typography using the TLF-->
+			<s:BorderContainer id="richTextExampleContainer"
+							   top="50"
+							   width="100%"
+							   styleName="exampleBorderContainer">
+				
+				<s:layout>
+					<s:VerticalLayout gap="50" horizontalAlign="center"
+									  paddingTop="50" paddingBottom="50" paddingLeft="50" paddingRight="50"/>
+				</s:layout>
+				
+				
+				<s:RichText id="richTextPlainTextExample">
+					<s:text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</s:text>
+				</s:RichText>
+				
+				<s:RichText id="richTextTextFlowExample">
+					<s:textFlow>
+						<s:TextFlow fontSize="12" ligatureLevel="exotic">
+							<s:p fontFamily="Minion Pro" >
+								<s:span fontSize="36" typographicCase="lowercaseToSmallCaps">Lorem ipsum</s:span>		
+								<s:span color="0xFF0000" fontStyle="italic">dolor</s:span>
+								<s:span fontWeight="bold" textDecoration="underline">sit amet,</s:span>
+								<s:span fontSize="24">consectetur</s:span>
+								<s:span fontFamily="Helvetica" tracking="8">adipiscing</s:span>
+								<s:span fontSize="48" textRotation="rotate180">elit.</s:span>
+							</s:p>
+						</s:TextFlow>
+					</s:textFlow>
+				</s:RichText>
+				
+			</s:BorderContainer>
+			
+		</s:Group>
+		
+		<s:Group id="textAreaExampleGroup"
+				 width="100%" height="100%">
+			
+			<s:RichText
+				top="35" x="{ richTextExampleContainer.x }"
+				text="Using TextArea…"
+				styleName="exampleGroupLabel"/>
+			
+			<!---The example in this container consists of a TextArea that has
+			some initial text styled using TLF.  The same paragraph of text 
+			repeats inside the container, comparing two different paragraph
+			styles.  The TextArea also demonstrates how the TLF styles new
+			input as well.-->
+			<s:BorderContainer id="textAreaExampleContainer"
+							   top="50" bottom="50"
+							   width="100%"
+							   styleName="exampleBorderContainer">
+				
+				<s:TextArea id="richTextAreaExample"
+							width="100%" height="100%">
+					<s:textFlow>
+						<s:TextFlow fontFamily="Minion Pro" fontSize="18" ligatureLevel="exotic">
+							<s:div lineHeight="120%">
+								<s:p>I am the very model of a scientist salarian. I've studied species turian, asari and batarian.</s:p>
+								<s:p>I'm quite good at genetics <s:span fontStyle="italic">(as a subset of biology)</s:span>because I am an expert <s:span fontStyle="italic">(which I know is a tautology).</s:span></s:p>
+								<s:p>My xenoscience studies range from urban to agrarian. I am the very model of a scientist salarian.</s:p>
+							</s:div>
+							<s:br/>
+							<s:div breakOpportunity="any" leadingModel="ascentDescentUp" lineHeight="20" color="0x666666">
+								<s:p>I am the very model of a scientist salarian. I've studied species turian, asari and batarian.</s:p>
+								<s:p>I'm quite good at genetics <s:span fontStyle="italic">(as a subset of biology)</s:span> because I am an expert <s:span fontStyle="italic">(which I know is a tautology).</s:span></s:p>
+								<s:p>My xenoscience studies range from urban to agrarian. I am the very model of a scientist salarian.</s:p>
+							</s:div>
+						</s:TextFlow>
+					</s:textFlow>
+				</s:TextArea>
+				
+			</s:BorderContainer>
+			
+		</s:Group>
+		
+	</s:VGroup>
+	
+	<!---The example in this group consists of a TextInput component styled
+	using TLF and shows how the TextInput styles user input.  The TextInput uses
+	only setStyle and style attributes and has no <code>textFlow</code> property
+	as RichText and TextArea do.-->
+	<s:Group id="textInputExampleGroup"
+			 top="50" right="0"
+			 width="200" height="100%">
+		
+		<s:RichText
+			top="50" x="{ styledTextInput.x + styledTextInput.width }"
+			text="Using TextInput…"
+			styleName="exampleGroupLabel"
+			blockProgression="rl"/>
+		
+		<s:TextInput id="styledTextInput"
+					 top="50" bottom="50" left="20"
+					 width="30"
+					 blockProgression="rl" fontFamily="Minion Pro" fontSize="18" typographicCase="lowercaseToSmallCaps"/>
+		
+	</s:Group>
+	
+</s:Application>

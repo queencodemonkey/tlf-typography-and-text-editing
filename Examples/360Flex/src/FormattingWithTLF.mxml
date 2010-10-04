@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *******************************************************************************
+ *
+ *  Copyright (c) 2010 Huyen Tue Dao
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ *  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *  DEALINGS IN THE SOFTWARE.
+ *
+ *******************************************************************************
+-->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="creationCompleteHandler(event)">
+
+	<fx:Declarations>
+		<fx:String id="attributeXMLString">
+				<![CDATA[<TextFlow xmlns="http://ns.adobe.com/textLayout/2008" fontFamily="Minion Pro" whiteSpaceCollapse="collapse">
+   <p fontSize="18" lineHeight="150%" >
+      <span fontFamily="Didot" fontSize="36" typographicCase="uppercase">Death</span> and <span fontFamily="Letter Gothic Std" fontSize="36">Famine</span> and <span fontFamily="Impact" fontSize="36">War</span> and <span fontFamily="Cracked" fontSize="36">Pollution</span> continued biking toward Tadfield…
+   </p>
+   <p fontSize="18" lineHeight="120%" paragraphSpaceBefore="20">
+      …And <span fontFamily="Constantia" fontSize="18" typographicCase="uppercase">Grevious Bodily Harm,</span> <span fontFamily="Century" fontSize="18">Cruelty to Animals,</span> <span fontFamily="Rockwell" fontSize="18">Things Not Working Properly Even After You've Given Them A Good Thumping [Formerly Known As] No Alcohol Lager,</span> and
+      <span fontFamily="Cooper Black" fontSize="18">Really Cool People</span> traveled with Them.
+   </p>
+</TextFlow>]]>
+		</fx:String>
+		
+		<s:ArrayList id="color">
+			<fx:uint>0xC46ADD</fx:uint>
+			<fx:uint>0xBC201E</fx:uint>
+			<fx:uint>0xEF8A29</fx:uint>
+			<fx:uint>0x0080FF</fx:uint>
+			<fx:uint>0x242A7E</fx:uint>
+		</s:ArrayList>
+		
+		<s:ArrayList id="fontSize">
+			<fx:int>10</fx:int>
+			<fx:int>11</fx:int>
+			<fx:int>12</fx:int>
+			<fx:int>14</fx:int>
+			<fx:int>18</fx:int>
+			<fx:int>24</fx:int>
+			<fx:int>36</fx:int>
+		</s:ArrayList>
+		
+		<s:ArrayList id="fontFamily">
+			<fx:String>Helvetica</fx:String>
+			<fx:String>Times New Roman</fx:String>
+			<fx:String>Courier</fx:String>
+			<fx:String>Impact</fx:String>
+		</s:ArrayList>
+		
+		<s:ArrayList id="fontStyle">
+			<fx:String>italic</fx:String>
+			<fx:String>normal</fx:String>
+		</s:ArrayList>
+		
+		<s:ArrayList id="fontWeight">
+			<fx:String>bold</fx:String>
+			<fx:String>normal</fx:String>
+		</s:ArrayList>
+		
+		<s:ArrayList id="paragraphSpaceAfter">
+			<fx:String>0</fx:String>
+			<fx:String>10</fx:String>
+			<fx:String>20</fx:String>
+			<fx:String>30</fx:String>
+			<fx:String>40</fx:String>
+			<fx:String>50</fx:String>
+		</s:ArrayList>
+		
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.elements.FlowElement;
+			import flashx.textLayout.elements.ParagraphElement;
+			import flashx.textLayout.elements.TextFlow;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.events.IndexChangeEvent;
+ 
+			XML.ignoreWhitespace = false;    
+			XML.ignoreProcessingInstructions = true;
+			XML.prettyPrinting = false;
+			
+			public var attributeXML:XML =
+				<TextFlow xmlns="http://ns.adobe.com/textLayout/2008" fontFamily="Minion Pro" whiteSpaceCollapse="collapse">
+					<p fontSize="18" lineHeight="150%" textIndent="0"><span fontFamily="Didot" fontSize="36" typographicCase="uppercase">Death</span> and <span fontFamily="Letter Gothic Std" fontSize="36">Famine</span> and <span fontFamily="Impact" fontSize="36">War</span> and <span fontFamily="Cracked" fontSize="36">Pollution</span> continued biking toward Tadfield.</p>
+					<p fontSize="18" lineHeight="120%" paragraphSpaceBefore="20" textIndent="0">…And <span fontFamily="Constantia" fontSize="18" typographicCase="uppercase">Grevious Bodily Harm,</span> <span fontFamily="Century" fontSize="18">Cruelty to Animals,</span> <span fontFamily="Rockwell" fontSize="18">Things Not Working Properly Even After You've Given Them A Good Thumping [Formerly Known As] No Alcohol Lager,</span> and <span fontFamily="Cooper Black" fontSize="18">Really Cool People</span> traveled with Them.</p>
+				</TextFlow>;
+			
+			public var propertiesSetStyleXML:XML =
+				<TextFlow xmlns="http://ns.adobe.com/textLayout/2008" fontFamily="Minion Pro" fontSize="24" whiteSpaceCollapse="collapse">
+					<p id="paragraph1"><span id="endsJustifyMeansSpan">The ends justify the means</span>, thought Aziraphale. <span id="roadToHellSpan">And the road to Hell is paved with good intentions</span>.</p>
+					<p id="paragraph2">*This is not actually true. The road to <span id="hellSpan">Hell</span> is paved with <span id="frozenSpan">frozen</span> door-to-door salesmen. On weekends many of the <span id="youngerDemonsSpan">younger demons</span> go ice-skating down it.</p>
+				</TextFlow>;
+			
+			private function applyFormat( flowElement:FlowElement, property:String, newValue:* ):void
+			{
+				if ( setStyleRB.selected )
+				{
+					flowElement.setStyle( property, newValue );
+				}
+				else
+				{
+					flowElement[ property ] = newValue;
+				}
+			}
+			
+			private function setParagraphOptionsValue( selectedOption:String ):void
+			{
+				paragraphOptionsValueComboBox.dataProvider = this[ selectedOption ];
+			}
+			
+			private function setSpanOptionsValue( selectedOption:String ):void
+			{
+				spanOptionsValueComboBox.dataProvider = this[ selectedOption ];
+				spanOptionsValueComboBox.labelFunction = spanOptionsValueComboBox.dataProvider == color? colorLabelFunction : null; 
+			}
+			
+			private function colorLabelFunction( color:uint ):String
+			{
+				var colorString:String = color.toString( 16 );
+				while ( colorString.length < 6 )
+					colorString = "0" + colorString;
+				colorString = "0x" + colorString.toUpperCase();
+				return colorString;
+			}
+
+			private function creationCompleteHandler( event:FlexEvent ):void
+			{
+				attributeText.text = attributeXMLString;
+				attributeRichText.textFlow = TextConverter.importToFlow( attributeXML, TextConverter.TEXT_LAYOUT_FORMAT );
+				propertiesSetStyleRichText.textFlow = TextConverter.importToFlow( propertiesSetStyleXML, TextConverter.TEXT_LAYOUT_FORMAT );
+				paragraphOptionsValueComboBox.dataProvider = fontFamily;
+				setParagraphOptionsValue( paragraphOptionsComboBox.selectedItem );
+				setSpanOptionsValue( spanOptionsComboBox.selectedItem );
+			}
+			
+			private function paragraphOptions_changeHandler( event:IndexChangeEvent ):void
+			{
+				setParagraphOptionsValue( paragraphOptionsComboBox.selectedItem );
+			}
+
+			private function spanOptions_changeHandler( event:IndexChangeEvent ):void
+			{
+				setSpanOptionsValue( spanOptionsComboBox.selectedItem );
+			}
+
+			private function applyParagraphOptionsButton_clickHandler(event:MouseEvent):void
+			{
+				applyFormat( propertiesSetStyleRichText.textFlow.getElementByID( paragraphsComboBox.selectedItem ), paragraphOptionsComboBox.selectedItem, paragraphOptionsValueComboBox.selectedItem );
+			}
+
+			private function applySpanOptionsButton_clickHandler(event:MouseEvent):void
+			{
+				applyFormat( propertiesSetStyleRichText.textFlow.getElementByID( spansComboBox.selectedItem ), spanOptionsComboBox.selectedItem, spanOptionsValueComboBox.selectedItem );
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Style source="assets/css/global.css"/>
+	
+	<s:RichText
+		top="25" left="25"
+		height="50"
+		text="Using TLF in Flex 4 Text Components"
+		styleName="title"/>
+
+	<s:VGroup id="exampleGroup"
+			  top="50" left="25" right="25"
+			  height="100%"
+			  paddingTop="35">
+		
+		<s:Group id="attributeExampleGroup"
+				 width="100%">
+			
+			<s:RichText
+				top="25" x="{ attributeExampleContainer.x }"
+				text="Using Attributes in Tags…"
+				styleName="exampleGroupLabel"/>
+			
+			<s:BorderContainer id="attributeExampleContainer"
+							   top="50"
+							   width="100%"
+							   styleName="exampleBorderContainer">
+				
+				<s:layout>
+					<s:HorizontalLayout gap="10" verticalAlign="middle"
+										paddingTop="50" paddingBottom="50" paddingLeft="50" paddingRight="50"/>
+				</s:layout>
+				
+				<s:Label id="attributeText"
+						 width="450"
+						 styleName="codeText"/>
+				
+				<s:Label width="50"
+						 text="⇒"
+						 styleName="arrowText"/>
+				
+				<s:RichText id="attributeRichText"
+							width="100%"/>
+				
+			</s:BorderContainer>
+			
+		</s:Group>
+		
+		<s:Group id="propertiesSetStyleGroup"
+				 width="100%">
+		
+		<s:RichText
+			top="25" x="{ propertiesSetStyleContainer.x }"
+			text="Using Properties/setStyle()…"
+			styleName="exampleGroupLabel"/>
+		
+		<s:BorderContainer id="propertiesSetStyleContainer"
+						   top="50" bottom="50"
+						   width="100%" height="480"
+						   styleName="exampleBorderContainer">
+			
+			<s:layout>
+				<s:HorizontalLayout gap="10" verticalAlign="middle"
+									paddingTop="50" paddingBottom="50" paddingLeft="50" paddingRight="50"/>
+			</s:layout>
+			
+			<s:RichText id="propertiesSetStyleRichText"
+						width="50%" height="100%"/>
+			
+			<s:Group id="propertiesSetStyleControls"
+					  width="50%" height="100%">
+			
+				<s:Label text="Formatting method: "
+						 top="0"/>
+				
+				<s:HGroup id="methodControls"
+						  width="100%" top="10">
+					
+					<s:RadioButton id="setStyleRB"
+								   label="Use setStyle()"
+								   value="setStyle"
+								   groupName="method"
+								   selected="true"/>
+					
+					<s:RadioButton id="propertiesRB"
+								   label="Set properties"
+								   value="properties"
+								   groupName="method"/>
+					
+				</s:HGroup>
+				
+				<s:Label text="Paragraph Formatting: "
+						 top="55"/>
+				
+				<s:HGroup id="paragraphControls"
+						  width="100%" top="70">
+					
+					<s:ComboBox id="paragraphsComboBox"
+								width="150"
+								requireSelection="true">
+						<s:dataProvider>
+							<s:ArrayList id="paragraphs">
+								<fx:String>paragraph1</fx:String>
+								<fx:String>paragraph2</fx:String>
+							</s:ArrayList>
+						</s:dataProvider>
+					</s:ComboBox>
+					
+					<s:ComboBox id="paragraphOptionsComboBox"
+								width="150"
+								requireSelection="true"
+								change="paragraphOptions_changeHandler(event)">
+						<s:dataProvider>
+							<s:ArrayList id="paragraphOptions">
+								<fx:String>fontFamily</fx:String>
+								<fx:String>fontSize</fx:String>
+								<fx:String>paragraphSpaceAfter</fx:String>
+							</s:ArrayList>
+						</s:dataProvider>
+					</s:ComboBox>
+					
+					<s:ComboBox id="paragraphOptionsValueComboBox"
+								width="150"
+								requireSelection="true"/>
+					
+					<s:Button id="applyParagraphOptionsButton"
+							  label="Apply"
+							  click="applyParagraphOptionsButton_clickHandler(event)"/>
+				</s:HGroup>
+				
+				<s:Label text="Span Formatting: "
+						 top="120"/>
+				
+				<s:HGroup id="spanControls"
+						  width="100%" top="135">
+					
+					<s:ComboBox id="spansComboBox"
+								width="150"
+								requireSelection="true">
+						<s:dataProvider>
+							<s:ArrayList id="spans">
+								<fx:String>endsJustifyMeansSpan</fx:String>
+								<fx:String>roadToHellSpan</fx:String>
+								<fx:String>hellSpan</fx:String>
+								<fx:String>frozenSpan</fx:String>
+								<fx:String>youngerDemonsSpan</fx:String>
+							</s:ArrayList>
+						</s:dataProvider>
+					</s:ComboBox>
+					
+					<s:ComboBox id="spanOptionsComboBox"
+								width="150"
+								requireSelection="true"
+								change="spanOptions_changeHandler(event)">
+						<s:dataProvider>
+							<s:ArrayList id="spanOptions">
+								<fx:String>color</fx:String>
+								<fx:String>fontFamily</fx:String>
+								<fx:String>fontSize</fx:String>
+								<fx:String>fontStyle</fx:String>
+								<fx:String>fontWeight</fx:String>
+							</s:ArrayList>
+						</s:dataProvider>
+					</s:ComboBox>
+					
+					<s:ComboBox id="spanOptionsValueComboBox"
+								width="150"
+								requireSelection="true"/>
+					
+					<s:Button id="applySpanOptionsButton"
+							  label="Apply"
+							  click="applySpanOptionsButton_clickHandler(event)"/>
+					
+				</s:HGroup>
+			</s:Group>
+			
+		</s:BorderContainer>
+			
+		</s:Group>
+		
+	</s:VGroup>
+
+</s:Application>

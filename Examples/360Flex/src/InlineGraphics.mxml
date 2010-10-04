@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *******************************************************************************
+ *
+ *  Copyright (c) 2010 Huyen Tue Dao
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ *  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ *  DEALINGS IN THE SOFTWARE.
+ *
+ *******************************************************************************
+-->
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Style source="assets/css/global.css"/>
+	
+	
+	<fx:Script>
+		<![CDATA[
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.elements.FlowElement;
+			import flashx.textLayout.elements.InlineGraphicElement;
+			import flashx.textLayout.elements.InlineGraphicElementStatus;
+			import flashx.textLayout.elements.TextFlow;
+			import flashx.textLayout.events.StatusChangeEvent;
+			
+			import mx.events.FlexEvent;
+			
+			import spark.components.ComboBox;
+			import spark.events.IndexChangeEvent;
+			
+			XML.ignoreWhitespace = false;    
+			XML.ignoreProcessingInstructions = true;
+			XML.prettyPrinting = false;
+			
+			[Bindable]
+			public var drSeuss:XML = 
+				<TextFlow xmlns="http://ns.adobe.com/textLayout/2008" fontFamily="Minion Pro" fontSize="24" lineHeight="120">
+					<p>When <img source="./assets/images/beetles.jpg" styleName="img1"/>s fight these battles in a <img source="./assets/images/bottle.jpg" styleName="img2"/> with their <img source="./assets/images/paddles.jpg" styleName="img3"/>s and the <img source="./assets/images/bottle.jpg" styleName="img2"/>'s on a <img source="./assets/images/poodle.jpg" styleName="img4"/> and the <img source="./assets/images/poodle.jpg" styleName="img4"/>'s eating <img source="./assets/images/noodles.jpg" styleName="img5"/>s…</p>
+					<p>They call this a muddle puddle tweetle <img source="./assets/images/poodle.jpg" styleName="img4"/> <img source="./assets/images/beetles.jpg" styleName="img1"/> <img source="./assets/images/noodles.jpg" styleName="img5"/> <img source="./assets/images/bottle.jpg" styleName="img2"/> <img source="./assets/images/paddles.jpg" styleName="img3"/> battle.</p>
+					<p textAlign="right">—Dr. Seuss</p>
+				</TextFlow>;
+			
+			private function imageComboBoxLabelFunction( item:Object ):String
+			{
+				return item.source;
+			}
+
+			private function creationCompleteHandler( event:FlexEvent ):void
+			{
+				var textFlow:TextFlow = TextConverter.importToFlow( drSeuss, TextConverter.TEXT_LAYOUT_FORMAT );
+				graphicsRichText.textFlow = textFlow;
+				textFlow.addEventListener( StatusChangeEvent.INLINE_GRAPHIC_STATUS_CHANGE, textFlow_inlineGraphicStatusChangeHandler, false, 0, true );
+			
+				img1ComboBox.dataProvider = imageData;
+				img1ComboBox.selectedIndex = 0;
+				img2ComboBox.dataProvider = imageData;
+				img2ComboBox.selectedIndex = 1;
+				img3ComboBox.dataProvider = imageData;
+				img3ComboBox.selectedIndex = 2;
+				img4ComboBox.dataProvider = imageData;
+				img4ComboBox.selectedIndex = 3;
+				img5ComboBox.dataProvider = imageData;
+				img5ComboBox.selectedIndex = 4;
+			}
+			
+			private function textFlow_inlineGraphicStatusChangeHandler( event:StatusChangeEvent ):void
+			{
+				var textFlow:TextFlow = event.target as TextFlow;
+				if ( event.status == InlineGraphicElementStatus.READY || event.status == InlineGraphicElementStatus.SIZE_PENDING )
+				{
+					var imgElement:InlineGraphicElement = event.element as InlineGraphicElement;
+					if ( imgElement )
+					{
+						imgElement.width = imgElement.measuredWidth;
+						imgElement.height = imgElement.measuredHeight;
+					}
+				}
+			}
+
+			private function comboBox_changeHandler( event:IndexChangeEvent ):void
+			{
+				var cb:ComboBox = event.target as ComboBox;
+				var styleName:String = null;
+				switch( event.target )
+				{
+					case img1ComboBox:
+						styleName = "img1";
+						break;
+					case img2ComboBox:
+						styleName = "img2";
+						break;
+					case img3ComboBox:
+						styleName = "img3";
+						break;
+					case img4ComboBox:
+						styleName = "img4";
+						break;
+					case img5ComboBox:
+						styleName = "img5";
+						break;
+				}
+				
+				var elements:Array = graphicsRichText.textFlow.getElementsByStyleName( styleName );
+				var item:Object = cb.selectedItem;
+				for each ( var element:FlowElement in elements )
+				{
+					var graphicElement:InlineGraphicElement = element as InlineGraphicElement;
+					if ( graphicElement )
+					{
+						graphicElement.source = "./assets/images/" + item.source;
+						graphicElement.width = item.width;
+						graphicElement.height = item.height;
+					}
+				}
+			}
+
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:ArrayList id="imageData">
+			<fx:Object source="beetles.jpg" width="178" height="100"/>
+			<fx:Object source="bottle.jpg" width="77" height="100"/>
+			<fx:Object source="paddles.jpg" width="100" height="63"/>
+			<fx:Object source="poodle.jpg" width="100" height="100"/>
+			<fx:Object source="noodles.jpg" width="100" height="100"/>
+		</s:ArrayList>
+	</fx:Declarations>
+	
+	<s:RichText
+		top="25" left="25"
+		height="50"
+		text="Using TLF Inline Graphics"
+		styleName="title"/>
+	
+	<s:BorderContainer id="attributeExampleContainer"
+					   top="100" bottom="50" left="25" right="25"
+					   width="100%"
+					   styleName="exampleBorderContainer">
+		
+		<s:layout>
+			<s:VerticalLayout gap="10" verticalAlign="middle" 
+							  paddingTop="40" paddingBottom="40" paddingLeft="50" paddingRight="50"/>
+		</s:layout>
+		
+		<s:RichText id="graphicsRichText"
+					width="100%" height="100%"/>
+		
+		<s:CheckBox id="showControls" label="Show controls: "/>
+		
+		<s:HGroup id="imageControls"
+				  width="100%"
+				  visible="{ showControls.selected }"
+				  includeInLayout="{ showControls.selected }"
+				  verticalAlign="middle">
+		
+			<s:Label text="Image 1: " paddingLeft="10"/>
+			
+			<s:ComboBox id="img1ComboBox"
+						width="120"
+						labelFunction="imageComboBoxLabelFunction"
+						requireSelection="true"
+						change="comboBox_changeHandler(event)"/>
+			
+			<s:Label text="Image 2: " paddingLeft="10"/>
+			
+			<s:ComboBox id="img2ComboBox"
+						width="120"
+						labelFunction="imageComboBoxLabelFunction"
+						requireSelection="true"
+						change="comboBox_changeHandler(event)"/>
+			
+			<s:Label text="Image 3: " paddingLeft="10"/>
+			
+			<s:ComboBox id="img3ComboBox"
+						width="120"
+						labelFunction="imageComboBoxLabelFunction"
+						requireSelection="true"
+						change="comboBox_changeHandler(event)"/>
+			
+			<s:Label text="Image 4: " paddingLeft="10"/>
+			
+			<s:ComboBox id="img4ComboBox"
+						width="120"
+						labelFunction="imageComboBoxLabelFunction"
+						requireSelection="true"
+						change="comboBox_changeHandler(event)"/>
+			
+			<s:Label text="Image 5: " paddingLeft="10"/>
+			
+			<s:ComboBox id="img5ComboBox"
+						width="120"
+						labelFunction="imageComboBoxLabelFunction"
+						requireSelection="true"
+						change="comboBox_changeHandler(event)"/>
+			
+		</s:HGroup>
+		
+	</s:BorderContainer>
+
+</s:Application>
