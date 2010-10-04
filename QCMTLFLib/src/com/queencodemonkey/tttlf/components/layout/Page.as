@@ -79,6 +79,14 @@ package com.queencodemonkey.tttlf.components.layout
 		 * The sprite that actually holds rendered text.
 		 */
 		public var container:Sprite = null;
+		
+		/**
+		 * The length of text contained in the page. 
+		 */		
+		public function get textLength():int
+		{
+			return containerController? containerController.textLength : NaN;
+		}
 
 		/**
 		 * The controller that links this page to a TextFlow.
@@ -106,7 +114,7 @@ package com.queencodemonkey.tttlf.components.layout
 		 */		
 		public function isLastPage():Boolean
 		{
-			return ( containerController.absoluteStart + containerController.textLength ) >= containerController.textFlow.textLength;
+			return containerController.textFlow && ( containerController.absoluteStart + containerController.textLength ) >= containerController.textFlow.textLength;
 		}
 
 		/**
