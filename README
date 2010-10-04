@@ -1,0 +1,10 @@
+DOCUMENTATION
+-------------
+
+"Typography and Text Editing in the Text Layout Framework" contains Flex 4.0 projects related to my 360|Flex presentation of the same name.
+
+The library project QCMTLFLib contains common components used in examples.
+
+There are also example projects demonstrating usage of Adobe's Text Layout Framework including:
+	360Flex: all example applications used in my September 22nd presentation.
+	Pagination: example of implementing pagination with TLF.

@@ -169,7 +169,6 @@
 			/**
 			 * @private
 			 * Removes a page when the "Remove page" button is clicked. 
-			 * 
 			 */
 			private function removePageButton_clickHandler(event:MouseEvent):void
 			{
@@ -205,10 +204,13 @@
 		<s:CheckBox id="autoPaginateCheckBox"
 					label="Auto-paginate"
 					selected="true"
+					toolTip="Turn on/off auto-pagination."
 					change="autoPaginateCheckBox_changeHandler( event )"/>
 		
 		<s:Button id="loadButton"
+				  width="100"
 				  label="Load text"
+				  toolTip="Render text data."
 				  click="loadButton_clickHandler( event )"/>
 		
 		<s:Rect width="1" height="60">
@@ -220,11 +222,13 @@
 		<s:Button id="addPageButton"
 				  label="Add page"
 				  enabled="false"
+				  toolTip="Add another page to text rendering."
 				  click="addPageButton_clickHandler( event )"/>
 		
 		<s:Button id="removePageButton"
 				  label="Remove page"
 				  enabled="false"
+				  toolTip="Remove page from text rendering."
 				  click="removePageButton_clickHandler( event )"/>
 		
 	</s:BorderContainer>
