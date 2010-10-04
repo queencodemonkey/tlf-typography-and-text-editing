@@ -196,14 +196,26 @@
 					text="Pagination with TLF"
 					fontFamily="Minion Pro, Times New Roman, Times, serif" fontSize="36"/>
 		
-		<s:Button id="loadButton"
-				  label="Load text"
-				  click="loadButton_clickHandler( event )"/>
+		<s:Rect width="2" height="60">
+			<s:fill>
+				<s:SolidColor color="0x999999"/>
+			</s:fill>
+		</s:Rect>
 		
 		<s:CheckBox id="autoPaginateCheckBox"
 					label="Auto-paginate"
 					selected="true"
 					change="autoPaginateCheckBox_changeHandler( event )"/>
+		
+		<s:Button id="loadButton"
+				  label="Load text"
+				  click="loadButton_clickHandler( event )"/>
+		
+		<s:Rect width="1" height="60">
+			<s:fill>
+				<s:SolidColor color="0xCCCCCC"/>
+			</s:fill>
+		</s:Rect>
 		
 		<s:Button id="addPageButton"
 				  label="Add page"
