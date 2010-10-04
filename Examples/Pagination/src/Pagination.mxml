@@ -139,7 +139,6 @@
 				removePageButton.enabled = false;
 			}
 
-
 			/**
 			 * @private 
 			 * Adds a page when the "Add page" button is clicked.
