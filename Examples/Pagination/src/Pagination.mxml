@@ -40,13 +40,29 @@
 			import flashx.textLayout.conversion.TextConverter;
 			import flashx.textLayout.elements.TextFlow;
 			
+			// When importing data from XML objects, need to set this or
+			// whitespace between elements may disappear.
 			XML.ignoreWhitespace = false;
 			
+			/**
+			 * Default page width.
+			 */
 			private static const PAGE_WIDTH:Number = 400;
+			
+			/**
+			 * Default page height. 
+			 */
 			private static const PAGE_HEIGHT:Number = 540;
 			
+			/**
+			 * TextFlow instance rendered in pages.
+			 */
 			private var textFlow:TextFlow = null;
 			
+			/**
+			 * Previously insantiated page objects kept in pool until another
+			 * one is needed.
+			 */
 			private var pagePool:Array = [];
 			
 			/**
