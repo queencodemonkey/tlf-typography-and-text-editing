@@ -1,7 +1,7 @@
 DOCUMENTATION
 -------------
 
-"Typography and Text Editing in the Text Layout Framework" contains Flex 4.0 projects related to my 360|Flex presentation of the same name.
+"Typography and Text Editing in the Text Layout Framework" contains Flex 4.0 projects related to my 360|Flex presentation of the same name.  The slides for the presentation can be found at http://www.slideshare.net/queencodemonkey/typography-text-editing-in-the-text-layout-framework.
 
 The library project QCMTLFLib contains common components used in examples.
 
